@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Solver - AI Based Practice Tool</title>
+    <meta name="description" content="Professional Captcha Practice & Learning Tool. Digital subscription for educational utility software.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #f8fafc;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+            padding: 4rem 5%;
+            animation: fadeIn 0.3s ease-in-out;
+            flex: 1;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Steps */
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .step-num {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+
+        /* Pricing */
+        .pricing-card {
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        /* Forms */
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #f1f5f9;
+            padding: 3rem 5%;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .footer-col a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        /* Admin Panel Specifics */
+        .admin-dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            min-height: 600px;
+        }
+
+        .admin-sidebar {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .admin-nav-item {
+            display: block;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .admin-nav-item:hover, .admin-nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .admin-content-panel {
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .log-table th, .log-table td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 1px solid var(--border);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .admin-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo" onclick="router('home')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span id="nav-logo-text">Captcha Solver</span>
+        </a>
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <div class="nav-links">
+            <a onclick="router('home')">Home</a>
+            <a onclick="router('about')">About</a>
+            <a onclick="router('pricing')">Pricing</a>
+            <a onclick="router('contact')">Contact</a>
+            <a onclick="openLoginModal()" class="btn-primary" style="color: white;">Login</a>
+        </div>
+    </nav>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 1.5rem;">Login</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUser" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" placeholder="Enter password">
+            </div>
+            <button class="btn-primary" style="width: 100%;" onclick="handleLogin()">Sign In</button>
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-light);">Demo Admin: admin / admin123</p>
+            <button onclick="closeLoginModal()" style="margin-top: 1rem; background: none; border: none; color: var(--text-light); cursor: pointer; width: 100%;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- 1️⃣ HOMEPAGE -->
+    <section id="home" class="page-section active">
+        <div class="hero">
+            <h1 id="hero-heading">Captcha Solver – AI Based Captcha Practice & Learning Tool</h1>
+            <p id="hero-subheading">Improve your captcha-solving accuracy with our smart digital utility platform.</p>
+            <div class="cta-group">
+                <button class="btn-primary" onclick="openLoginModal()">Get Access</button>
+                <button class="btn-outline" onclick="router('about')">Learn More</button>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🤖</span>
+                <h3>AI-Based Practice</h3>
+                <p>Advanced algorithms generate diverse captcha types for training purposes.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3>Progress Tracking</h3>
+                <p>Monitor your accuracy and speed improvements over time.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h3>Secure Access</h3>
+                <p>Encrypted data transmission and secure login protocols.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 4rem; background: var(--secondary); padding: 3rem; border-radius: 12px;">
+            <h2 style="text-align: center; margin-bottom: 2rem;">How It Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3>Sign Up</h3>
+                    <p>Create your account using your email.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3>Verify</h3>
+                    <p>Complete the verification process.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3>Practice</h3>
+                    <p>Unlock the tool and start learning.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2️⃣ ABOUT PAGE -->
+    <section id="about" class="page-section">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="margin-bottom: 2rem;">About Captcha Solver</h1>
+            <p style="margin-bottom: 1rem;">Captcha Solver is a premier educational and utility software designed to help users understand the mechanics of various captcha systems and improve their manual solving speed and accuracy.</p>
+            
+            <div style="background: #eff6ff; padding: 1.5rem; border-left: 4px solid var(--primary); margin: 2rem 0;">
+                <h3 style="color: var(--primary);">Important Disclaimer</h3>
+                <ul style="margin-left: 1.5rem; margin-top: 1rem; list-style-type: disc;">
+                    <li>This is purely a subscription-based digital utility tool.</li>
+                    <li><strong>No Gambling:</strong> We do not offer any games of chance or betting.</li>
+                    <li><strong>No Earning:</strong> This is not an "earning app". Users do not get paid for solving captchas.</li>
+                    <li><strong>No Returns:</strong> We do not promise any financial returns or investments.</li>
+                </ul>
+            </div>
+            
+            <p>Our mission is to provide a secure, ad-free environment for developers and data entry professionals to practice their skills efficiently.</p>
+        </div>
+    </section>
+
+    <!-- 3️⃣ PRICING PAGE -->
+    <section id="pricing" class="page-section">
+        <div class="pricing-card">
+            <h2>One-Time Subscription</h2>
+            <p>Access all features for a lifetime</p>
+            <div class="price" id="display-price">₹499</div>
+            <ul style="text-align: left; margin: 2rem 0; list-style: none;">
+                <li style="margin-bottom: 0.5rem;">✅ Unlimited Practice Sessions</li>
+                <li style="margin-bottom: 0.5rem;">✅ AI-Powered Analysis</li>
+                <li style="margin-bottom: 0.5rem;">✅ 24/7 Customer Support</li>
+                <li style="margin-bottom: 0.5rem;">✅ Secure & Ad-free</li>
+            </ul>
+            <button class="btn-primary" style="width: 100%;" onclick="alert('Redirecting to secure payment gateway...')">Proceed to Payment</button>
+            <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 1rem;">Secure Payment via Cashfree/Razorpay</p>
+        </div>
+    </section>
+
+    <!-- 4️⃣ CONTACT PAGE -->
+    <section id="contact" class="page-section">
+        <div class="form-container">
+            <h1 style="text-align: center; margin-bottom: 2rem;">Contact Support</h1>
+            
+            <div class="feature-card" style="margin-bottom: 2rem; text-align: left;">
+                <p><strong>Email:</strong> <span id="contact-email">support@captchasolver.com</span></p>
+                <p><strong>Address:</strong> <span id="contact-address">123 Tech Park, Cyber City, India</span></p>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <a href="#" id="link-yt" style="color: var(--primary);">YouTube</a>
+                    <a href="#" id="link-ig" style="color: var(--primary);">Instagram</a>
+                    <a href="#" id="link-tg" style="color: var(--primary);">Telegram</a>
+                </div>
+            </div>
+
+            <form onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 5️⃣ PRIVACY POLICY -->
+    <section id="privacy" class="page-section">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="margin-bottom: 1.5rem;">Privacy Policy</h1>
+            <p class="date">Last Updated: October 2023</p>
+            <br>
+            <h3>1. Data Collection</h3>
+            <p>We only collect your name and email address for login and account verification purposes. We do not sell your data to third parties.</p>
+            <br>
+            <h3>2. Usage of Data</h3>
+            <p>Your data is used strictly to provide access to the Captcha Solver tool and improve user experience.</p>
+            <br>
+            <h3>3. Compliance</h3>
+            <p>We comply with the Indian IT Act, 2000 and all relevant data protection regulations applicable in India.</p>
+            <br>
+            <h3>4. Financial Information</h3>
+            <p>We do not store your credit card or banking information. All payments are processed through secure, PCI-DSS compliant payment gateways (Razorpay/Cashfree).</p>
+        </div>
+    </section>
+
+    <!-- 6️⃣ TERMS & CONDITIONS -->
+    <section id="terms" class="page-section">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="margin-bottom: 1.5rem;">Terms & Conditions</h1>
+            <h3>1. Digital Services</h3>
+            <p>By purchasing a subscription, you agree that you are paying for access to a digital utility tool. There is no physical product delivery.</p>
+            <br>
+            <h3>2. No Refunds</h3>
+            <p>Due to the digital nature of the product, all sales are final. No refunds will be issued once access is granted.</p>
+            <br>
+            <h3>3. Fair Usage Policy</h3>
+            <p>Users must not use automated bots to access the system. Abuse of the platform will result in immediate account termination.</p>
+            <br>
+            <h3>4. No Earning Guarantee</h3>
+            <p>This website does not promise any financial gain, salary, or reward for using the software. It is strictly a practice tool.</p>
+        </div>
+    </section>
+
+    <!-- 🔧 ADMIN PANEL -->
+    <section id="admin" class="page-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1>Admin Panel</h1>
+            <button class="btn-outline" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div class="admin-dashboard">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <a class="admin-nav-item active" onclick="switchAdminTab('admin-general')">General Settings</a>
+                <a class="admin-nav-item" onclick="switchAdminTab('admin-pricing')">Pricing & Contact</a>
+                <a class="admin-nav-item" onclick="switchAdminTab('admin-users')">Subscribers</a>
+                <a class="admin-nav-item" onclick="switchAdminTab('admin-logs')">Payment Logs</a>
+            </aside>
+
+            <!-- Content -->
+            <div class="admin-content">
+                
+                <!-- General Settings -->
+                <div id="admin-general" class="admin-section active admin-content-panel">
+                    <h3>Homepage Text</h3>
+                    <div class="form-group">
+                        <label>Hero Heading</label>
+                        <input type="text" id="admin-hero-heading">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Subheading</label>
+                        <input type="text" id="admin-hero-sub">
+                    </div>
+                    <button class="btn-primary" onclick="saveGeneralSettings()">Update Homepage</button>
+                    
+                    <hr style="margin: 2rem 0; border: 0; border-top: 1px solid var(--border);">
+                    
+                    <h3>App Settings</h3>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="admin-watermark-toggle" style="width: auto;">
+                        <label style="margin: 0;">Enable Watermark in App</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Watermark Text</label>
+                        <input type="text" id="admin-watermark-text">
+                    </div>
+                    <button class="btn-primary" onclick="alert('App settings saved!')">Save App Settings</button>
+                </div>
+
+                <!-- Pricing & Contact -->
+                <div id="admin-pricing" class="admin-section admin-content-panel">
+                    <h3>Update Pricing</h3>
+                    <div class="form-group">
+                        <label>Subscription Price (Include currency symbol)</label>
+                        <input type="text" id="admin-price">
+                    </div>
+                    
+                    <h3>Contact Details</h3>
+                    <div class="form-group">
+                        <label>Support Email</label>
+                        <input type="email" id="admin-email">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="admin-address">
+                    </div>
+                    
+                    <h3>Social Links</h3>
+                    <div class="form-group"><label>YouTube URL</label><input type="text" id="admin-yt"></div>
+                    <div class="form-group"><label>Instagram URL</label><input type="text" id="admin-ig"></div>
+                    <div class="form-group"><label>Telegram URL</label><input type="text" id="admin-tg"></div>
+
+                    <button class="btn-primary" onclick="saveContactSettings()">Update Info</button>
+                </div>
+
+                <!-- Subscribers -->
+                <div id="admin-users" class="admin-section admin-content-panel">
+                    <h3>Manage Subscribers</h3>
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>User Email</th>
+                                <th>Status</th>
+                                <th>Date Joined</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>user1@example.com</td>
+                                <td style="color: var(--success);">Active</td>
+                                <td>2023-10-24</td>
+                                <td><button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Block</button></td>
+                            </tr>
+                            <tr>
+                                <td>user2@test.com</td>
+                                <td style="color: var(--danger);">Expired</td>
+                                <td>2023-09-15</td>
+                                <td><button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Logs -->
+                <div id="admin-logs" class="admin-section admin-content-panel">
+                    <h3>Payment Logs</h3>
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TXN_123456</td>
+                                <td>₹499</td>
+                                <td style="color: var(--success);">Success</td>
+                                <td>2023-10-24 10:30 AM</td>
+                            </tr>
+                            <tr>
+                                <td>TXN_123457</td>
+                                <td>₹499</td>
+                                <td style="color: var(--danger);">Failed</td>
+                                <td>2023-10-24 11:15 AM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Captcha Solver</h4>
+                <p style="color: var(--text-light); font-size: 0.9rem;">
+                    Secure, fast, and reliable tool for improving captcha solving skills.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a onclick="router('home')">Home</a>
+                <a onclick="router('pricing')">Pricing</a>
+                <a onclick="router('admin')">Admin Login</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a onclick="router('privacy')">Privacy Policy</a>
+                <a onclick="router('terms')">Terms & Conditions</a>
+                <a onclick="router('contact')">Support</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 Captcha Solver. All rights reserved. Not an earning app.
+        </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        // --- State Management (Simulated Backend) ---
+        const defaultState = {
+            heroHeading: "Captcha Solver – AI Based Captcha Practice & Learning Tool",
+            heroSub: "Improve your captcha-solving accuracy with our smart digital utility platform.",
+            price: "₹499",
+            email: "support@captchasolver.com",
+            address: "123 Tech Park, Cyber City, India",
+            yt: "#",
+            ig: "#",
+            tg: "#",
+            watermarkEnabled: true,
+            watermarkText: "CS Practice Mode"
+        };
+
+        // Load state from LocalStorage or use default
+        let appState = JSON.parse(localStorage.getItem('cs_appState')) || defaultState;
+
+        // --- DOM Elements ---
+        const views = {
+            home: document.getElementById('home'),
+            about: document.getElementById('about'),
+            pricing: document.getElementById('pricing'),
+            contact: document.getElementById('contact'),
+            privacy: document.getElementById('privacy'),
+            terms: document.getElementById('terms'),
+            admin: document.getElementById('admin')
+        };
+
+        const elements = {
+            heroHeading: document.getElementById('hero-heading'),
+            heroSub: document.getElementById('hero-subheading'),
+            price: document.getElementById('display-price'),
+            email: document.getElementById('contact-email'),
+            address: document.getElementById('contact-address'),
+            yt: document.getElementById('link-yt'),
+            ig: document.getElementById('link-ig'),
+            tg: document.getElementById('link-tg')
+        };
+
+        // --- Init Function ---
+        function init() {
+            updateUI();
+            // Pre-fill admin forms
+            document.getElementById('admin-hero-heading').value = appState.heroHeading;
+            document.getElementById('admin-hero-sub').value = appState.heroSub;
+            document.getElementById('admin-price').value = appState.price;
+            document.getElementById('admin-email').value = appState.email;
+            document.getElementById('admin-address').value = appState.address;
+            document.getElementById('admin-yt').value = appState.yt;
+            document.getElementById('admin-ig').value = appState.ig;
+            document.getElementById('admin-tg').value = appState.tg;
+            document.getElementById('admin-watermark-toggle').checked = appState.watermarkEnabled;
+            document.getElementById('admin-watermark-text').value = appState.watermarkText;
+        }
+
+        function updateUI() {
+            elements.heroHeading.innerText = appState.heroHeading;
+            elements.heroSub.innerText = appState.heroSub;
+            elements.price.innerText = appState.price;
+            elements.email.innerText = appState.email;
+            elements.address.innerText = appState.address;
+            elements.yt.href = appState.yt;
+            elements.ig.href = appState.ig;
+            elements.tg.href = appState.tg;
+        }
+
+        function saveState() {
+            localStorage.setItem('cs_appState', JSON.stringify(appState));
+            updateUI();
+            alert('Settings Updated Successfully!');
+        }
+
+        // --- Navigation Logic ---
+        function router(pageId) {
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Hide all sections
+            Object.values(views).forEach(el => el.classList.remove('active'));
+            
+            // Show target section
+            if(views[pageId]) {
+                views[pageId].classList.add('active');
+            }
+
+            // Mobile menu close
+            document.querySelector('.nav-links').classList.remove('active');
+        }
+
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // --- Login / Auth Logic ---
+        const loginModal = document.getElementById('loginModal');
+
+        function openLoginModal() {
+            loginModal.style.display = 'flex';
+        }
+
+        function closeLoginModal() {
+            loginModal.style.display = 'none';
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value;
+            const pass = document.getElementById('loginPass').value;
+
+            if(user === 'admin' && pass === 'admin123') {
+                closeLoginModal();
+                router('admin');
+                // Clear inputs
+                document.getElementById('loginUser').value = '';
+                document.getElementById('loginPass').value = '';
+            } else {
+                alert('Invalid Credentials! (Hint: admin / admin123)');
+            }
+        }
+
+        function handleLogout() {
+            router('home');
+        }
+
+        // --- Admin Panel Logic ---
+        function switchAdminTab(tabId) {
+            // Remove active class from all sidebars
+            document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+            // Add active to clicked
+            event.target.classList.add('active');
+
+            // Hide all panels
+            document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+            // Show target
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function saveGeneralSettings() {
+            appState.heroHeading = document.getElementById('admin-hero-heading').value;
+            appState.heroSub = document.getElementById('admin-hero-sub').value;
+            appState.watermarkEnabled = document.getElementById('admin-watermark-toggle').checked;
+            appState.watermarkText = document.getElementById('admin-watermark-text').value;
+            saveState();
+        }
+
+        function saveContactSettings() {
+            appState.price = document.getElementById('admin-price').value;
+            appState.email = document.getElementById('admin-email').value;
+            appState.address = document.getElementById('admin-address').value;
+            appState.yt = document.getElementById('admin-yt').value;
+            appState.ig = document.getElementById('admin-ig').value;
+            appState.tg = document.getElementById('admin-tg').value;
+            saveState();
+        }
+
+        // Initialize on load
+        window.onload = init;
+
+    </script>
+</body>
+</html>
